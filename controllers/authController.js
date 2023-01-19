@@ -1,7 +1,10 @@
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
+const User = require("../models/user");
+const bcrypt = require("bcryptjs");
 
 exports.login_with_email = function (req, res) {
+  //TODO: Validate and sanitize input
   passport.authenticate("local", { session: false }, (err, user, info) => {
     console.log("Authanticate user: ", user._id);
     console.log("Authanticate error: ", err);
@@ -25,4 +28,28 @@ exports.login_with_email = function (req, res) {
       return res.json({ userID, token });
     });
   })(req, res);
+};
+
+exports.register_with_email = function (req, res, next) {
+  //TODO: Validate and sanitize input
+  if (req.body.password !== req.body.confirmPassword) return res.json({ message: "Passwords do not match" });
+
+  // eslint-disable-next-line no-undef
+  bcrypt.hash(req.body.password, 10, (err, hashedPassword) => {
+    if (err) {
+      return next(err);
+    }
+    const user = new User({
+      first_name: req.body.firstName,
+      last_name: req.body.lastName,
+      email: req.body.email,
+      password: hashedPassword,
+    });
+    console.log(user);
+    user.save((err) => {
+      if (err) return console.log("Failed to save user to DB");
+      res.sendStatus(200);
+      return console.log(user + " : Saved to DB!");
+    });
+  });
 };
