@@ -24,15 +24,16 @@ exports.login_with_email = function (req, res) {
       const userID = user._id;
       // generate a signed son web token with the contents of user object and return it in the response
       // eslint-disable-next-line no-undef
-      const token = jwt.sign({ user: userID }, process.env.JWT_SECRET);
-      return res.json({ userID, token });
+      const token = jwt.sign({ user: userID }, process.env.JWT_SECRET, { expiresIn: "30d" });
+      return res.json({ success: true, userID, token });
     });
   })(req, res);
 };
 
 exports.register_with_email = function (req, res, next) {
   //TODO: Validate and sanitize input
-  if (req.body.password !== req.body.confirmPassword) return res.json({ message: "Passwords do not match" });
+  if (req.body.password !== req.body.confirmPassword)
+    return res.json({ success: false, message: "Passwords do not match" });
 
   // eslint-disable-next-line no-undef
   bcrypt.hash(req.body.password, 10, (err, hashedPassword) => {
@@ -45,11 +46,15 @@ exports.register_with_email = function (req, res, next) {
       email: req.body.email,
       password: hashedPassword,
     });
-    console.log(user);
+
     user.save((err) => {
       if (err) return console.log("Failed to save user to DB");
-      res.sendStatus(200);
+      res.status(200).json({ success: true, message: "User added" });
       return console.log(user + " : Saved to DB!");
     });
   });
+};
+
+exports.get_current_user = function (req, res) {
+  res.json(req.user);
 };

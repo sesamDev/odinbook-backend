@@ -4,13 +4,16 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors");
 
+//Endpoints
 const postsAPI = require("./api/posts");
 const authAPI = require("./api/auth");
-const passport = require("passport");
-const session = require("express-session");
-require("./config/passport");
+const userAPI = require("./api/user");
 
 require("dotenv").config();
+
+// Authentication
+const passport = require("passport");
+require("./config/passport");
 
 const app = express();
 
@@ -27,18 +30,19 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-// app.use(passportConfig);
 
 // eslint-disable-next-line no-undef
-app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false }));
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(passport.authenticate("session"));
+// app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false }));
+// app.use(passport.initialize());
+// app.use(passport.session());
+// app.use(passport.authenticate("session"));
 // eslint-disable-next-line no-undef
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api/v1/posts", postsAPI);
 app.use("/api/v1/auth", authAPI);
+app.use("/api/v1/user", userAPI);
+
 app.use("/", (req, res) => res.sendStatus(400));
 
 module.exports = app;
