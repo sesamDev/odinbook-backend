@@ -12,7 +12,6 @@ const userAPI = require("./api/user");
 require("dotenv").config();
 
 // Authentication
-const passport = require("passport");
 require("./config/passport");
 
 const app = express();
