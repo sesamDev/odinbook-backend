@@ -8,7 +8,6 @@ const UserSchema = new Schema({
   password: { type: String, min: 1, max: 100, required: true },
   admin: { type: Boolean, default: false },
   avatar: { type: String },
-  posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
 });
 
 UserSchema.virtual("url").get(function () {
