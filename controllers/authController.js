@@ -24,7 +24,7 @@ exports.login_with_email = function (req, res) {
       const userID = user._id;
       // generate a signed son web token with the contents of user object and return it in the response
       // eslint-disable-next-line no-undef
-      const token = jwt.sign({ user: userID }, process.env.JWT_SECRET, { expiresIn: "30d" });
+      const token = jwt.sign({ user: userID, timestamp: Date.now() }, process.env.JWT_SECRET, { expiresIn: "30d" });
       return res.json({ success: true, userID, token });
     });
   })(req, res);
