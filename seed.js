@@ -1,35 +1,24 @@
-// const { faker } = require("@faker-js/faker/locale/en");
-// const User = require("./models/user");
+const { faker } = require("@faker-js/faker/locale/en");
+const User = require("./models/user");
+require("dotenv").config();
 
-// function createRandomUser() {
-//   return {
-//     first_name: "John",
-//     last_name: "Doe",
-//     // email: faker.internet.exampleEmail(),
-//     // password: faker.internet.password(),
-//     // avatar: faker.image.avatar(),
-//     // postImg: faker.image.animals(640, 640, true),
-//   };
-// }
+function createRandomUser(n) {
+  return {
+    first_name: "Fake",
+    last_name: "User " + n,
+    email: faker.internet.exampleEmail(),
+    password: faker.internet.password(),
+    avatar: faker.image.avatar(),
+  };
+}
 
-// // Set up mongoose connection
-// const mongoose = require("mongoose");
-// // eslint-disable-next-line no-undef
-// const mongoDB = process.env.DB;
-// mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
-// const db = mongoose.connection;
-// db.on("error", console.error.bind(console, "connection error:"));
-
-// function createRandomUser() {
-//   return {
-//     first_name: "John",
-//     last_name: "Doe",
-//     email: "jd@jd.com",
-//     password: "123456",
-//     avatar: "defaultPictureURL",
-//     // postImg: faker.image.animals(640, 640, true),
-//   };
-// }
+// Set up mongoose connection
+const mongoose = require("mongoose");
+// eslint-disable-next-line no-undef
+const mongoDB = process.env.DB;
+mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error:"));
 
 // // // first_name: { type: String, min: 1, max: 100, required: true },
 // // //   last_name: { type: String, min: 1, max: 100, required: true },
@@ -39,12 +28,21 @@
 // // //   avatar: { type: String, default: defaultAvatar },
 // // //   posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
 
-// Array.from({ length: 1 }).forEach(() => {
-//   const user = new User(createRandomUser());
-//   user.save((err) => {
-//     if (err) return console.log("Failed to save user to DB");
-//     return console.log(user + " : Saved to DB!");
-//   });
-// });
+Array.from({ length: 1 }).forEach((v, idx) => {
+  const user = new User(createRandomUser(idx + 1));
+  user.save((err) => {
+    if (err) return console.log("Failed to save user to DB");
+    return console.log(user + " : Saved to DB!");
+  });
+});
+
+db.off;
 
 // // console.log(createRandomUser());
+
+// async function PopulateDatabaseWithUsers() {
+//   const user = createRandomUser(1);
+//   return console.log(user);
+// }
+
+// PopulateDatabaseWithUsers();
