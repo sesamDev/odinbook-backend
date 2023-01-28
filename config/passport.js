@@ -44,12 +44,14 @@ passport.use(
     function (jwtPayload, done) {
       console.log("---JWT AUTH---");
       console.log(jwtPayload);
-      User.findById(jwtPayload.user, { password: 0 }, {}, (err, user) => {
-        console.log(user);
+      User.findById(jwtPayload.user, { password: 0 })
+        .populate("friends", { password: 0 })
+        .exec((err, user) => {
+          console.log(user);
 
-        if (err) return done(err, false);
-        return done(null, user);
-      });
+          if (err) return done(err, false);
+          return done(null, user);
+        });
     }
   )
 );
