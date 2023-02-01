@@ -6,10 +6,6 @@ const bcrypt = require("bcryptjs");
 exports.login_with_email = function (req, res) {
   //TODO: Validate and sanitize input
   passport.authenticate("local", { session: false }, (err, user, info) => {
-    console.log("Authanticate user: ", user._id);
-    console.log("Authanticate error: ", err);
-    console.log("Authanticate info: ", info);
-
     if (err || !user) {
       return res.status(400).json({
         message: info.message,

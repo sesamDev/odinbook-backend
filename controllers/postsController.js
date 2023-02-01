@@ -1,14 +1,16 @@
+const User = require("../models/user");
 const Post = require("../models/post");
 
 //TODO: Return formatted_timestamp
 exports.get_all_posts = (req, res, next) => {
-  Post.find({ author: req.query.userID })
+  User.find;
+
+  Post.find({}, { password: 0 })
     .populate("author")
     .exec((err, posts) => {
       if (err) {
         return next(err);
       }
-      console.log(posts);
       return res.json(posts);
     });
 };
@@ -24,11 +26,9 @@ exports.get_all_comments_for_post = (req, res) => {
 //TODO: Validate and sanitize input
 //TODO: Save images
 exports.post_new_post = (req, res) => {
-  console.log("Calling create post from userID: ", req.query.userID);
   const post = new Post({
-    title: "Test Post",
-    text: "Test text",
-    author: req.query.userID,
+    text: req.body.text,
+    author: req.body.author,
     timestamp: Date.now(),
   });
 
