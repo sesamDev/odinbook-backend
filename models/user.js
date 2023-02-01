@@ -8,6 +8,7 @@ const UserSchema = new Schema({
   password: { type: String, min: 1, max: 100, required: true },
   admin: { type: Boolean, default: false },
   avatar: { type: String },
+  friends: [{ type: Schema.Types.ObjectId, ref: "User" }],
 });
 
 UserSchema.virtual("url").get(function () {
