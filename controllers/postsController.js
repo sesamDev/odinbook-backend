@@ -3,7 +3,7 @@ const Post = require("../models/post");
 
 //TODO: Return formatted_timestamp
 exports.get_all_posts = (req, res) => {
-  User.findById(req.body._id, (err, user) => {
+  User.findById(req.params.id, (err, user) => {
     if (err) return console.log(err);
 
     let friendList = user.friends;
@@ -12,6 +12,7 @@ exports.get_all_posts = (req, res) => {
     Post.find({ author: { $in: friendList } }, { text: 1, author: 1, timestamp: 1 })
       .limit(300)
       .sort({ timestamp: -1 })
+      .populate("author", "first_name last_name")
       .exec((err, posts) => {
         if (err) return res.json(err);
         return res.json(posts);
