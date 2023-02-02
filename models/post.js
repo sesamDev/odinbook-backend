@@ -6,7 +6,7 @@ const PostSchema = new Schema({
   text: { type: String, min: 1, max: 100, required: true },
   author: { type: Schema.Types.ObjectId, ref: "User", required: true },
   timestamp: { type: Date, default: Date.now() },
-  likes: { type: Number, default: 0 },
+  likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
 });
 
 PostSchema.virtual("timestamp_formatted").get(function () {
