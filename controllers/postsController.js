@@ -9,7 +9,7 @@ exports.get_all_posts = (req, res) => {
     let friendList = user.friends;
     friendList.push(user._id);
 
-    Post.find({ author: { $in: friendList } }, { text: 1, author: 1, timestamp: 1 })
+    Post.find({ author: { $in: friendList } }, { text: 1, author: 1, timestamp: 1, likes: 1 })
       .limit(300)
       .sort({ timestamp: -1 })
       .populate("author", "first_name last_name")
@@ -43,5 +43,19 @@ exports.post_new_post = (req, res) => {
     }
     console.log("Saved post to DB: ", post);
     return res.json({ sucess: true, post: post });
+  });
+};
+
+exports.post_add_like = (req) => {
+  Post.findByIdAndUpdate(req.query.postId, { $push: { likes: req.query.userId } }, {}, (err) => {
+    if (err) return console.log("error: ", err);
+    console.log("Like added to post: ", req.query.postId);
+  });
+};
+
+exports.post_remove_like = (req) => {
+  Post.findByIdAndUpdate(req.query.postId, { $pull: { likes: req.query.userId } }, {}, (err) => {
+    if (err) return console.log("error: ", err);
+    console.log("Like removed from post: ", req.query.postId);
   });
 };

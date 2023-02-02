@@ -7,4 +7,8 @@ router.get("/:id", passport.authenticate("jwt", { session: false }), postsContro
 
 router.post("/", passport.authenticate("jwt", { session: false }), postsController.post_new_post);
 
+router.post("/like/add", passport.authenticate("jwt", { session: false }), postsController.post_add_like);
+
+router.post("/like/remove", passport.authenticate("jwt", { session: false }), postsController.post_remove_like);
+
 module.exports = router;
