@@ -2,17 +2,21 @@ const User = require("../models/user");
 const Post = require("../models/post");
 
 //TODO: Return formatted_timestamp
-exports.get_all_posts = (req, res, next) => {
-  User.find;
+exports.get_all_posts = (req, res) => {
+  User.findById(req.body._id, (err, user) => {
+    if (err) return console.log(err);
 
-  Post.find({}, { password: 0 })
-    .populate("author")
-    .exec((err, posts) => {
-      if (err) {
-        return next(err);
-      }
-      return res.json(posts);
-    });
+    let friendList = user.friends;
+    friendList.push(user._id);
+
+    Post.find({ author: { $in: friendList } }, { text: 1, author: 1, timestamp: 1 })
+      .limit(300)
+      .sort({ timestamp: -1 })
+      .exec((err, posts) => {
+        if (err) return res.json(err);
+        return res.json(posts);
+      });
+  });
 };
 
 exports.get_one_posts = (req, res) => {
