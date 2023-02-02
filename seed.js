@@ -1,5 +1,7 @@
 const { faker } = require("@faker-js/faker/locale/en");
 const User = require("./models/user");
+const Post = require("./models/post");
+
 require("dotenv").config();
 
 const names = [
@@ -68,8 +70,18 @@ function createRandomUser(firstName, lastName) {
   });
 }
 
+function createRandomPost(userId, text) {
+  return new Post({
+    text: text,
+    author: userId,
+    timestamp: Date.now(),
+    likes: [],
+  });
+}
+
 // Set up mongoose connection
 const mongoose = require("mongoose");
+const post = require("./models/post");
 // eslint-disable-next-line no-undef
 const mongoDB = process.env.DB;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -110,16 +122,34 @@ db.on("error", console.error.bind(console, "connection error:"));
 //   });
 // });
 
-User.find({ _id: { $ne: "63c98aef48230828f1a7b439" } }).exec((err, users) => {
-  if (err) return console.log(err);
+// --- ADD FRIENDS ---
+// User.find({ _id: { $ne: "63c98aef48230828f1a7b439" } }).exec((err, users) => {
+//   if (err) return console.log(err);
 
-  User.findById("63c98aef48230828f1a7b439")
-    .update({ friends: users })
-    .exec((err) => {
-      if (err) return console.log("Error updating user", err);
-      console.log("Friends added");
-    });
-});
+//   User.findById("63c98aef48230828f1a7b439")
+//     .update({ friends: users })
+//     .exec((err) => {
+//       if (err) return console.log("Error updating user", err);
+//       console.log("Friends added");
+//     });
+// });
+
+// --- ADD POSTS ---
+// User.find({ _id: { $ne: "63c98aef48230828f1a7b439" } }).exec((err, users) => {
+//   if (err) return console.log(err);
+
+//   users.forEach((user) => {
+//     let post = createRandomPost(
+//       user._id,
+//       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent id massa aliquet, dignissim diam non, rhoncus erat."
+//     );
+//     post.save((err, post) => {
+//       if (err) return console.log(err);
+
+//       console.log("Post saved: ", post);
+//     });
+//   });
+// });
 
 // console.table(usersArr);
 
