@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const Post = require("../models/post");
+const Comment = require("../models/comment");
 
 //TODO: Return formatted_timestamp
 exports.get_all_posts = (req, res) => {
@@ -20,8 +21,13 @@ exports.get_all_posts = (req, res) => {
   });
 };
 
-exports.get_one_posts = (req, res) => {
-  res.send("Send one post");
+exports.get_one_post = (req, res) => {
+  Post.findById(req.params.postId)
+    .populate("author", { password: 0, admin: 0, friends: 0, posts: 0, email: 0 })
+    .exec((err, post) => {
+      if (err) console.log(err);
+      res.json(post);
+    });
 };
 
 exports.get_all_comments_for_post = (req, res) => {
@@ -57,5 +63,18 @@ exports.post_remove_like = (req) => {
   Post.findByIdAndUpdate(req.query.postId, { $pull: { likes: req.query.userId } }, {}, (err) => {
     if (err) return console.log("error: ", err);
     console.log("Like removed from post: ", req.query.postId);
+  });
+};
+
+exports.post_new_comment = (req, res) => {
+  const comment = new Comment({
+    related_post: req.query.postID,
+    author: req.query.userID,
+    text: req.query.text,
+  });
+
+  comment.save((err) => {
+    if (err) return console.log("Error saving comment: ", err);
+    res.sendStatus(200);
   });
 };
