@@ -78,3 +78,13 @@ exports.post_new_comment = (req, res) => {
     res.sendStatus(200);
   });
 };
+
+exports.get_all_comments = (req, res) => {
+  Comment.find({ related_post: req.query.postID })
+    .populate("author", { password: 0, friends: 0, posts: 0, email: 0, admin: 0 })
+    .sort({ timestamp: -1 })
+    .exec((err, comments) => {
+      if (err) return console.log(err);
+      res.json(comments);
+    });
+};
