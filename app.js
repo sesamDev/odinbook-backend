@@ -8,6 +8,7 @@ const cors = require("cors");
 const postsAPI = require("./api/posts");
 const authAPI = require("./api/auth");
 const userAPI = require("./api/user");
+const requestAPI = require("./api/request");
 
 require("dotenv").config();
 
@@ -41,6 +42,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/api/v1/posts", postsAPI);
 app.use("/api/v1/auth", authAPI);
 app.use("/api/v1/user", userAPI);
+app.use("/api/v1/request", requestAPI);
 
 app.use("/", (req, res) => res.sendStatus(400));
 
