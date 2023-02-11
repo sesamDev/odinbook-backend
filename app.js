@@ -39,6 +39,7 @@ app.use(cookieParser());
 // eslint-disable-next-line no-undef
 app.use(express.static(path.join(__dirname, "public")));
 
+app.get("/", (req, res) => res.send("Hello from Odinbooks API. :)"));
 app.use("/api/v1/posts", postsAPI);
 app.use("/api/v1/auth", authAPI);
 app.use("/api/v1/user", userAPI);
