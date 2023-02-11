@@ -31,3 +31,19 @@ exports.post_accept_request = (req) => {
     });
   });
 };
+
+exports.delete_decline_request = (req) => {
+  FriendRequest.findByIdAndRemove(req.params.id, (err) => {
+    if (err) return console.log("Error deleting request: ", err);
+    return console.log("Deleted friend request: ", req.params.id);
+  });
+};
+
+exports.get_friends = (req, res) => {
+  User.findById(req.user._id, {})
+    .populate("friends", { _id: 1, first_name: 1, last_name: 1, avatar: 1 })
+    .exec((err, user) => {
+      if (err) return console.log("Error getting user: ", err);
+      res.json(user.friends);
+    });
+};
