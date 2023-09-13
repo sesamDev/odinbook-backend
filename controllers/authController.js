@@ -52,5 +52,6 @@ exports.register_with_email = function (req, res, next) {
 };
 
 exports.get_current_user = function (req, res) {
+  console.log(req);
   res.json(req.user);
 };

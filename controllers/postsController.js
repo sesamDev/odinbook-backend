@@ -10,7 +10,7 @@ exports.get_all_posts = (req, res) => {
     let friendList = user.friends;
     friendList.push(user._id);
 
-    Post.find({ author: { $in: friendList } }, { text: 1, author: 1, timestamp: 1, likes: 1 })
+    Post.find({ author: { $in: friendList } }, { text: 1, author: 1, imgURL: 1, timestamp: 1, likes: 1 })
       .limit(300)
       .sort({ timestamp: -1 })
       .populate("author", "first_name last_name")
@@ -35,11 +35,13 @@ exports.get_all_comments_for_post = (req, res) => {
 };
 
 //TODO: Validate and sanitize input
-//TODO: Save images
 exports.post_new_post = (req, res) => {
+  console.log("Image??: " + req.body.imgURL);
+
   const post = new Post({
     text: req.body.text,
     author: req.body.author,
+    imgURL: req.body.imgURL,
     timestamp: Date.now(),
   });
 

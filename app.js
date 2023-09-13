@@ -3,6 +3,8 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors");
+const firebase = require("firebase/app");
+const firebaseConfig = require("./config/firebase");
 
 //Endpoints
 const postsAPI = require("./api/posts");
@@ -16,9 +18,11 @@ require("dotenv").config();
 require("./config/passport");
 
 const app = express();
+firebase.initializeApp(firebaseConfig);
 
 // Set up mongoose connection
 const mongoose = require("mongoose");
+mongoose.set("strictQuery", false);
 // eslint-disable-next-line no-undef
 const mongoDB = process.env.DB;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
